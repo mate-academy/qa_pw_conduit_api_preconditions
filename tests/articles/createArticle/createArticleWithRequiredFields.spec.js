@@ -1,12 +1,7 @@
 import { test } from '../../_fixtures/fixtures';
-import { generateNewArticleData } from '../../../src/common/testData/generateNewArticleData';
 import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
 
-let article;
-
-test.beforeEach(async ({ page, user, logger }) => {
-  article = generateNewArticleData(logger);
-
+test.beforeEach(async ({ page, user }) => {
   await signUpUser(page, user);
 });
 
@@ -14,16 +9,17 @@ test('Creat an article with required fields', async ({
   internalHomePage,
   createArticlePage,
   internalViewArticlePage,
+  articleWithoutTags,
 }) => {
   await internalHomePage.header.clickNewArticleLink();
-  await createArticlePage.fillTitleField(article.title);
-  await createArticlePage.fillDescriptionField(article.description);
-  await createArticlePage.fillTextField(article.text);
+  await createArticlePage.fillTitleField(articleWithoutTags.title);
+  await createArticlePage.fillDescriptionField(articleWithoutTags.description);
+  await createArticlePage.fillTextField(articleWithoutTags.text);
   await createArticlePage.clickPublishArticleButton();
   await internalViewArticlePage.articleHeader.assertTitleIsVisible(
-    article.title,
+    articleWithoutTags.title,
   );
   await internalViewArticlePage.articleContent.assertArticleTextIsVisible(
-    article.text,
+    articleWithoutTags.text,
   );
 });
