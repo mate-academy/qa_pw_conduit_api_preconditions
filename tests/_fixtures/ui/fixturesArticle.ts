@@ -1,13 +1,13 @@
 import { test as base } from '@playwright/test';
 import { generateNewArticleData } from '../../../src/common/testData/generateNewArticleData';
 import { CreateArticlePage } from '../../../src/ui/pages/article/CreateArticlePage';
-import { ViewArticlePage } from '../../../src/ui/pages/article/ViewArticlePage';
+import { InternalViewArticlePage } from '../../../src/ui/pages/article/view/InternalViewArticlePage';
 
 export const test = base.extend<{
   articleWithoutTags;
   articleWithOneTag;
   createArticlePage;
-  viewArticlePage;
+  internalViewArticlePage;
 }>({
   articleWithoutTags: async ({ logger }, use) => {
     const article = generateNewArticleData(logger);
@@ -24,8 +24,8 @@ export const test = base.extend<{
 
     await use(createArticlePage);
   },
-  viewArticlePage: async ({ page }, use) => {
-    const viewArticlePage = new ViewArticlePage(page);
+  internalViewArticlePage: async ({ page }, use) => {
+    const viewArticlePage = new InternalViewArticlePage(page);
 
     await use(viewArticlePage);
   },

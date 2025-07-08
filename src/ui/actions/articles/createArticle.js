@@ -1,5 +1,5 @@
 import { CreateArticlePage } from '../../pages/article/CreateArticlePage';
-import { ViewArticlePage } from '../../pages/article/ViewArticlePage';
+import { InternalViewArticlePage } from '../../pages/article/view/InternalViewArticlePage';
 import { testStep } from '../../../common/helpers/pw';
 
 export async function createArticle(page, article, userId = 0) {
@@ -7,11 +7,11 @@ export async function createArticle(page, article, userId = 0) {
     `Create an article`,
     async () => {
       const createArticlePage = new CreateArticlePage(page, userId);
-      const viewArticlePage = new ViewArticlePage(page, userId);
+      const viewArticlePage = new InternalViewArticlePage(page, userId);
 
       await createArticlePage.open();
       await createArticlePage.submitCreateArticleForm(article);
-      await viewArticlePage.assertArticleTitleIsVisible(article.title);
+      await viewArticlePage.articleHeader.assertTitleIsVisible(article.title);
 
       return viewArticlePage.getCurrentPageUrl();
     },

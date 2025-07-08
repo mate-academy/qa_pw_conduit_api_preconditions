@@ -8,17 +8,17 @@ let homePage;
 
 test.use({ contextsNumber: 2 });
 
-test.beforeEach(async ({ pages, newUserData }) => {
-  await signUpUser(pages[0], newUserData);
+test.beforeEach(async ({ pages, user }) => {
+  await signUpUser(pages[0], user);
 
   signInPage = new SignInPage(pages[1]);
   homePage = new InternalHomePage(pages[1]);
 });
 
-test('Successful `Sign in` flow test', async ({ newUserData }) => {
+test('Successful `Sign in` flow test', async ({ user }) => {
   await signInPage.open();
-  await signInPage.fillEmailField(newUserData.email);
-  await signInPage.fillPasswordField(newUserData.password);
+  await signInPage.fillEmailField(user.email);
+  await signInPage.fillPasswordField(user.password);
   await signInPage.clickSignInButton();
 
   await homePage.yourFeed.assertTabLinkVisible();

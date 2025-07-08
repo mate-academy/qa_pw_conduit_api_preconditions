@@ -1,6 +1,7 @@
 import { test as base } from '@playwright/test';
 import { request as apiRequest } from '@playwright/test';
-import { UsersApi } from '../../../src/api/endpoints/UsersApi';
+import { UsersApi } from '../../../src/api/resources/UsersApi';
+import { ApiClientFacade } from '../../../src/api/ApiClientFacade';
 
 export const test = base.extend<{
   usersApi;
@@ -9,30 +10,28 @@ export const test = base.extend<{
   registeredUsers;
   userRequests;
 }>({
-  usersApi: async ({ request }, use) => {
-    const client = new UsersApi(request);
+  usersApi: async ({ request, logger }, use) => {
+    const apiClientFacade = new ApiClientFacade({ request, logger });
+    const client = new UsersApi(apiClientFacade);
 
     await use(client);
   },
-  registeredUser: async ({ usersApi, newUserData }, use) => {
-    const response = await usersApi.registerNewUser(newUserData);
+  registeredUser: async ({ usersApi, user }, use) => {
+    const response = await usersApi.registerNewUser(user);
 
     await usersApi.assertSuccessResponseCode(response);
 
-    newUserData['token'] = await usersApi.parseTokenFromBody(response);
+    user['token'] = await usersApi.parseTokenFromBody(response);
 
-    await use(newUserData);
+    await use(user);
   },
-  registeredUserInBrowserContext: async (
-    { request, newUsersData, browser },
-    use,
-  ) => {
+  registeredUserInBrowserContext: async ({ request, users, browser }, use) => {
     const usersApi = new UsersApi(request);
-    const response = await usersApi.registerNewUser(newUsersData[0]);
+    const response = await usersApi.registerNewUser(users[0]);
 
     await usersApi.assertSuccessResponseCode(response);
 
-    newUsersData[0]['token'] = await usersApi.parseTokenFromBody(response);
+    users[0]['token'] = await usersApi.parseTokenFromBody(response);
 
     const context = await browser.newContext({
       storageState: {
@@ -48,7 +47,7 @@ export const test = base.extend<{
         origins: [
           {
             origin: 'https://conduit.mate.academy',
-            localStorage: [{ name: 'user', value: newUsersData[0] }],
+            localStorage: [{ name: 'user', value: users[0] }],
           },
         ],
       },
@@ -58,17 +57,17 @@ export const test = base.extend<{
 
     await page.context().storageState({ path: 'userNEW.json' });
 
-    await use(newUsersData[1]);
+    await use(users[1]);
   },
-  registeredUsers: async ({ usersApi, newUsersData, usersNumber }, use) => {
+  registeredUsers: async ({ usersApi, users, usersNumber }, use) => {
     for (let i = 0; i < usersNumber; i++) {
-      const response = await usersApi.registerNewUser(newUsersData[i]);
+      const response = await usersApi.registerNewUser(users[i]);
 
       await usersApi.assertSuccessResponseCode(response);
 
-      newUsersData[i]['token'] = await usersApi.parseTokenFromBody(response);
+      users[i]['token'] = await usersApi.parseTokenFromBody(response);
     }
-    await use(newUsersData);
+    await use(users);
   },
   userRequests: async ({ registeredUsers, usersNumber }, use) => {
     const userRequests = Array(usersNumber);

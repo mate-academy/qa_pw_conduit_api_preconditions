@@ -1,16 +1,16 @@
 import { expect } from '@playwright/test';
-import { BaseAPI } from '../BaseApi';
+import { BaseApi } from '../BaseApi';
 import { ROUTES } from '../constants/apiRoutes';
 
-export class UsersApi extends BaseAPI {
-  constructor(request) {
-    super(request);
+export class UsersApi extends BaseApi {
+  constructor(client) {
+    super(client);
     this._headers = { 'content-type': 'application/json' };
   }
 
   async registerNewUser(userData) {
     return await this.step(`Register new user`, async () => {
-      return await this.request.post(ROUTES.users.index, {
+      return await this.client.post(ROUTES.users.index, {
         data: { user: userData },
         headers: this._headers,
       });
@@ -24,7 +24,7 @@ export class UsersApi extends BaseAPI {
         ...this._headers,
       };
 
-      return await this.request.put(ROUTES.user, {
+      return await this.client.put(ROUTES.user, {
         data: { user: userData },
         headers,
       });
@@ -33,7 +33,7 @@ export class UsersApi extends BaseAPI {
 
   async loginUser(userData) {
     return await this.step(`Register new user`, async () => {
-      return await this.request.post(ROUTES.users.login, {
+      return await this.client.post(ROUTES.users.login, {
         data: { user: userData },
         headers: this._headers,
       });

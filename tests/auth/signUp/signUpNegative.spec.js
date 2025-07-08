@@ -6,28 +6,28 @@ import {
 } from '../../../src/ui/constants/authErrorMessages';
 
 test.describe('Sign up negative tests', () => {
-  test('Sign up with empty username', async ({ newUserData, signUpPage }) => {
+  test('Sign up with empty username', async ({ user, signUpPage }) => {
     await signUpPage.open();
-    await signUpPage.fillEmailField(newUserData.email);
-    await signUpPage.fillPasswordField(newUserData.password);
+    await signUpPage.fillEmailField(user.email);
+    await signUpPage.fillPasswordField(user.password);
     await signUpPage.clickSignUpButton();
 
     await signUpPage.assertErrorMessageContainsText(EMPTY_USERNAME_MESSAGE);
   });
 
-  test('Sign up with empty email', async ({ newUserData, signUpPage }) => {
+  test('Sign up with empty email', async ({ user, signUpPage }) => {
     await signUpPage.open();
-    await signUpPage.fillUsernameField(newUserData.username);
-    await signUpPage.fillPasswordField(newUserData.password);
+    await signUpPage.fillUsernameField(user.username);
+    await signUpPage.fillPasswordField(user.password);
     await signUpPage.clickSignUpButton();
 
     await signUpPage.assertErrorMessageContainsText(INVALID_EMAIL_MESSAGE);
   });
 
-  test('Sign up with empty password', async ({ newUserData, signUpPage }) => {
+  test('Sign up with empty password', async ({ user, signUpPage }) => {
     await signUpPage.open();
-    await signUpPage.fillUsernameField(newUserData.username);
-    await signUpPage.fillEmailField(newUserData.email);
+    await signUpPage.fillUsernameField(user.username);
+    await signUpPage.fillEmailField(user.email);
     await signUpPage.clickSignUpButton();
 
     await signUpPage.assertErrorMessageContainsText(EMPTY_PASSWORD_MESSAGE);

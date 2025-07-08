@@ -9,8 +9,8 @@ export const test = base.extend<
     usersNumber;
     contextsNumber;
     pages;
-    newUserData;
-    newUsersData;
+    user;
+    users;
     infoTestLog;
     addAllureTestHierarchy;
   },
@@ -30,12 +30,12 @@ export const test = base.extend<
     }
     await use(pages);
   },
-  newUserData: async ({ logger }, use) => {
+  user: async ({ logger }, use) => {
     const userData = generateNewUserData(logger);
 
     await use(userData);
   },
-  newUsersData: async ({ logger, usersNumber }, use) => {
+  users: async ({ logger, usersNumber }, use) => {
     const users = Array(usersNumber);
 
     for (let i = 0; i < usersNumber; i++) {
@@ -46,7 +46,7 @@ export const test = base.extend<
   },
   logger: [
     async ({}, use) => {
-      const logger = new Logger('error');
+      const logger = new Logger(process.env.LOG_LEVEL);
 
       await use(logger);
     },

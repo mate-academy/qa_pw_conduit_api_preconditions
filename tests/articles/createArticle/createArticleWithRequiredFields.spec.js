@@ -4,17 +4,26 @@ import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
 
 let article;
 
-test.beforeEach(async ({}) => {
-  //article = generateNewArticleData(logger);
-  //await signUpUser(page, newUserData);
+test.beforeEach(async ({ page, user, logger }) => {
+  article = generateNewArticleData(logger);
+
+  await signUpUser(page, user);
 });
 
-test.only('Creat an article with required fields', async ({
+test('Creat an article with required fields', async ({
   internalHomePage,
   createArticlePage,
-  viewArticlePage,
-  registeredUserInBrowserContext,
-  page,
+  internalViewArticlePage,
 }) => {
-  await internalHomePage.open();
+  await internalHomePage.header.clickNewArticleLink();
+  await createArticlePage.fillTitleField(article.title);
+  await createArticlePage.fillDescriptionField(article.description);
+  await createArticlePage.fillTextField(article.text);
+  await createArticlePage.clickPublishArticleButton();
+  await internalViewArticlePage.articleHeader.assertTitleIsVisible(
+    article.title,
+  );
+  await internalViewArticlePage.articleContent.assertArticleTextIsVisible(
+    article.text,
+  );
 });

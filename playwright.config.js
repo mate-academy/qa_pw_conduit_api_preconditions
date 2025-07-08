@@ -1,11 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
+import {
+  loadEnvFile,
+  throwMissinEnvTypeError,
+} from './src/common/helpers/loadEnvFile';
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// import dotenv from 'dotenv';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
+const envType = process.env.ENV_TYPE || throwMissinEnvTypeError();
+
+loadEnvFile(envType);
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -25,7 +26,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: 'https://conduit.mate.academy',
+    baseURL: process.env.BASE_URL,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'retain-on-failure',
