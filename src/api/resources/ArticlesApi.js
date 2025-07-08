@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { BaseApi } from '../BaseApi';
-import { ROUTES } from '../../constants/apiRoutes';
+import { ROUTES } from '../constants/apiRoutes';
 
 export class ArticlesApi extends BaseApi {
   constructor(client) {

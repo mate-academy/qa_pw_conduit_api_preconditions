@@ -6,6 +6,8 @@ import { test as homeTest } from './ui/fixturesHome';
 import { test as profileTest } from './ui/fixturesProfile';
 import { test as factoryTest } from './fixturesFactories';
 import { test as usersApiTest } from './api/fixturesUsersApi';
+import { test as profilesApiTest } from './api/fixturesProfilesApi';
+import { test as articlesApiTest } from './api/fixturesArticlesApi';
 
 export const test = mergeTests(
   authTest,
@@ -15,4 +17,6 @@ export const test = mergeTests(
   profileTest,
   factoryTest,
   usersApiTest,
+  profilesApiTest,
+  articlesApiTest,
 );
