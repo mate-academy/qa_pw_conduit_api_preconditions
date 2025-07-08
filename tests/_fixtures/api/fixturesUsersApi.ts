@@ -2,11 +2,12 @@ import { test as base } from '@playwright/test';
 import { request as apiRequest } from '@playwright/test';
 import { UsersApi } from '../../../src/api/resources/UsersApi';
 import { ApiClientFacade } from '../../../src/api/ApiClientFacade';
+import { generateStorageStateForAuth } from '../../../src/common/helpers/generateStorageStateForAuth';
 
 export const test = base.extend<{
   usersApi;
   registeredUser;
-  registeredUserInBrowserContext;
+  loggedInUserAndPage;
   registeredUsers;
   userRequests;
 }>({
@@ -25,39 +26,13 @@ export const test = base.extend<{
 
     await use(user);
   },
-  registeredUserInBrowserContext: async ({ request, users, browser }, use) => {
-    const usersApi = new UsersApi(request);
-    const response = await usersApi.registerNewUser(users[0]);
+  loggedInUserAndPage: async ({ registeredUser, browser }, use) => {
+    const storageState = generateStorageStateForAuth(registeredUser);
 
-    await usersApi.assertSuccessResponseCode(response);
-
-    users[0]['token'] = await usersApi.parseTokenFromBody(response);
-
-    const context = await browser.newContext({
-      storageState: {
-        cookies: [
-          {
-            name: 'auth',
-            value: await usersApi.parseTokenFromBody(response),
-            domain: 'conduit.mate.academy',
-            path: '/',
-            expires: -1,
-          },
-        ],
-        origins: [
-          {
-            origin: 'https://conduit.mate.academy',
-            localStorage: [{ name: 'user', value: users[0] }],
-          },
-        ],
-      },
-    });
-
+    const context = await browser.newContext(storageState);
     const page = await context.newPage();
 
-    await page.context().storageState({ path: 'userNEW.json' });
-
-    await use(users[1]);
+    await use({ registeredUser, page });
   },
   registeredUsers: async ({ usersApi, users, usersNumber }, use) => {
     for (let i = 0; i < usersNumber; i++) {
