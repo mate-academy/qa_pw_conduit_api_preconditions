@@ -1,17 +1,15 @@
 import { test } from '../../_fixtures/fixtures';
-import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
 
 let newSettings;
 
-test.beforeEach(async ({ page, user, factories }) => {
-  await signUpUser(page, user);
-
+test.beforeEach(async ({ factories }) => {
   newSettings = factories.userSettings.generateUserSettings();
 });
 
 test('Update all user settings for registered user', async ({
   editSettingsPage,
   viewUserProfilePage,
+  loggedInUserAndPage,
 }) => {
   await editSettingsPage.open();
   await editSettingsPage.fillProfilePictureUrlField(

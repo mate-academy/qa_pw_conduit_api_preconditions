@@ -1,14 +1,23 @@
 import { test } from '../../_fixtures/fixtures';
 import { ExternalViewArticlePage } from '../../../src/ui/pages/article/view/ExternalViewArticlePage';
-import { createArticle } from '../../../src/ui/actions/articles/createArticle';
-import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
 
 test.use({ contextsNumber: 2, usersNumber: 1 });
 
-test.beforeEach(async ({ pages, users, articleWithoutTags }) => {
-  await signUpUser(pages[0], users[0], 1);
-  await createArticle(pages[0], articleWithoutTags, 1);
-});
+test.beforeEach(
+  async ({ loggedInUserAndPage, articlesApi, articleWithoutTags }) => {
+    const { registeredUser } = loggedInUserAndPage;
+
+    const response = await articlesApi.createArticle(registeredUser.token, {
+      title: articleWithoutTags.title,
+      description: articleWithoutTags.description || 'Default description',
+      body: articleWithoutTags.text,
+    });
+    await articlesApi.assertSuccessResponseCode(response);
+    const createdArticle = await response.json();
+
+    articleWithoutTags.url = `/article/${createdArticle.article.slug}`;
+  },
+);
 
 test('View an article as not registered user', async ({
   articleWithoutTags,
