@@ -13,7 +13,7 @@ test('Login with new password after it was updated from settings', async ({
   internalHomePage,
   loggedInUserAndPage,
 }) => {
-  const registeredUser = loggedInUserAndPage;
+  const { registeredUser } = loggedInUserAndPage;
   await editSettingsPage.open();
   await editSettingsPage.fillNewPasswordField(newPassword);
   await editSettingsPage.clickUpdateSettingsButton();
