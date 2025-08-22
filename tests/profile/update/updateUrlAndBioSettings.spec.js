@@ -13,18 +13,18 @@ test('Update URL and Bio settings for registered user', async ({
 }) => {
   await editSettingsPage.open();
   await editSettingsPage.fillProfilePictureUrlField(
-    newSettings.profilPictureUrl,
+    newSettings.profilePictureUrl,
   );
   await editSettingsPage.fillBioTextArea(newSettings.bio);
   await editSettingsPage.clickUpdateSettingsButton();
   await editSettingsPage.assertProfilePictureUrlHasValue(
-    newSettings.profilPictureUrl,
+    newSettings.profilePictureUrl,
   );
   await viewUserProfilePage.assertBioHasText(newSettings.bio);
   await viewUserProfilePage.assertUsernameIsCorrect(newSettings.username);
   await viewUserProfilePage.clickEditProfileSettingsLink();
   await editSettingsPage.assertProfilePictureUrlHasValue(
-    newSettings.profilPictureUrl,
+    newSettings.profilePictureUrl,
   );
   await editSettingsPage.assertBioHasValue(newSettings.bio);
 });
