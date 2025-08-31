@@ -40,7 +40,7 @@ export class ArticleHeader extends BaseComponent {
   }
 
   #authorLink(username) {
-    return this.page.getByRole('link', { username }).first();
+    return this.page.getByRole('link', { name: username }).first();
   }
 
   async assertAuthorNameIsVisible(username) {

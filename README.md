@@ -28,10 +28,10 @@ The full list of Conduit APIs is described in the [documentation](https://docume
 
 1. Run all the test using the `npm run test-staging` and save the execution time for the future comparation.
 2. Update the `profile` tests to use `loggedInUserAndPage` fixture instead of the `signUpUser` function.
-- use create article tests as example. 
-3. Update the `viewArticle` tests to create article using APIs instead of UI. 
+- use create article tests as example.
+3. Update the `viewArticle` tests to create article using APIs instead of UI.
 4. Run all tests and make sure they are passing.
-5. Record the new time of tests execution and compare it to the previous. 
+5. Record the new time of tests execution and compare it to the previous.
 
 ## Task Reporting
 
