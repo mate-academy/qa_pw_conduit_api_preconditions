@@ -31,17 +31,17 @@ testParameters.forEach(({ tagsNumber, testNameEnding }) => {
       await internalHomePage.header.clickNewArticleLink();
       await createArticlePage.fillTitleField(article.title);
       await createArticlePage.fillDescriptionField(article.description);
-      await createArticlePage.fillTextField(article.text);
-      await createArticlePage.fillTagsField(article.tags);
+      await createArticlePage.fillTextField(article.body);
+      await createArticlePage.fillTagsField(article.tagList);
       await createArticlePage.clickPublishArticleButton();
       await internalViewArticlePage.articleHeader.assertTitleIsVisible(
         article.title,
       );
       await internalViewArticlePage.articleContent.assertArticleTextIsVisible(
-        article.text,
+        article.body,
       );
       await internalViewArticlePage.articleContent.assertArticleTagsAreVisible(
-        article.tags,
+        article.tagList,
       );
     });
   });
