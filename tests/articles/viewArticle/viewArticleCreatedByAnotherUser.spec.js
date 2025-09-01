@@ -1,25 +1,17 @@
 import { test } from '../../_fixtures/fixtures';
 import { InternalViewArticlePage } from '../../../src/ui/pages/article/view/InternalViewArticlePage';
-import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
-
-test.use({ contextsNumber: 2, usersNumber: 2 });
-let article;
-
-test.beforeEach(
-  async ({ pages, users, loggedInUserAndPage, createArticleWithTags }) => {
-    await signUpUser(pages[1], users[1], 2);
-
-    article = await createArticleWithTags(
-      1,
-      loggedInUserAndPage.registeredUser.token,
-    );
-  },
-);
 
 test('View an article created by another registered user', async ({
-  pages,
+  loggedInUserAndPage,
+  secondLoggedInUserAndPage,
+  createArticleWithTags,
 }) => {
-  const page = new InternalViewArticlePage(pages[1], 2);
+  // Create article as first usr
+  const firstUserToken = loggedInUserAndPage.registeredUser.token;
+  const article = await createArticleWithTags(1, firstUserToken);
+
+  // Read article as another user
+  const page = new InternalViewArticlePage(secondLoggedInUserAndPage.page);
 
   await page.openArticleBySlug(article.slug);
   await page.articleHeader.assertTitleIsVisible(article.title);

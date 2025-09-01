@@ -21,13 +21,13 @@ export class ArticleHeader extends BaseComponent {
       .first();
   }
 
-  async clickFollowArtcile() {
+  async clickFollowArtiсle() {
     await this.step(`Click the Follow article button`, async () => {
       await this.#articleFavoriteButton.click();
     });
   }
 
-  async clickUnfollowArtcile() {
+  async clickUnfollowArtiсle() {
     await this.step(`Click the Unfollow article button`, async () => {
       await this.#articleUnfavoriteButton.click();
     });

@@ -1,17 +1,14 @@
 import { test } from '../../_fixtures/fixtures';
 
-let article;
-
-test.beforeEach(async ({ loggedInUserAndPage, createArticleWithTags }) => {
-  article = await createArticleWithTags(
-    1,
-    loggedInUserAndPage.registeredUser.token,
-  );
-});
-
 test('View an article as not registered user', async ({
   externalViewArticlePage,
+  loggedInUserAndPage,
+  createArticleWithTags,
 }) => {
+  // Create article as first usr
+  const firstUserToken = loggedInUserAndPage.registeredUser.token;
+  const article = await createArticleWithTags(1, firstUserToken);
+
   await externalViewArticlePage.openArticleBySlug(article.slug);
   await externalViewArticlePage.articleHeader.assertTitleIsVisible(
     article.title,
