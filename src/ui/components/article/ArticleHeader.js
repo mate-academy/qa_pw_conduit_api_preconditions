@@ -21,13 +21,13 @@ export class ArticleHeader extends BaseComponent {
       .first();
   }
 
-  async clickFollowArtcile() {
+  async clickFollowArticle() {
     await this.step(`Click the Follow article button`, async () => {
       await this.#articleFavoriteButton.click();
     });
   }
 
-  async clickUnfollowArtcile() {
+  async clickUnfollowArticle() {
     await this.step(`Click the Unfollow article button`, async () => {
       await this.#articleUnfavoriteButton.click();
     });
@@ -40,7 +40,7 @@ export class ArticleHeader extends BaseComponent {
   }
 
   #authorLink(username) {
-    return this.page.getByRole('link', { username }).first();
+    return this.page.getByRole('link', { name: username }).first();
   }
 
   async assertAuthorNameIsVisible(username) {
