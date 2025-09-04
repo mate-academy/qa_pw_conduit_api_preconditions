@@ -1,10 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
 import {
-  loadEnvFile,
-  throwMissinEnvTypeError,
+  loadEnvFile
 } from './src/common/helpers/loadEnvFile';
 
-const envType = process.env.ENV_TYPE || throwMissinEnvTypeError();
+const envType = process.env.ENV_TYPE || 'staging';
 
 loadEnvFile(envType);
 
