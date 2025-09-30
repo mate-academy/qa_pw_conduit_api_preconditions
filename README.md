@@ -11,7 +11,7 @@
 
 In this task you need to make all the test preconditions use API requests instead of UI actions.
 
-The full list of Conduit APIs is described in the [documentation](https://documenter.getpostman.com/view/22790481/2sB2j1iY5B).
+The full list of Conduit APIs is described in the [documentation](https://documenter.getpostman.com/view/48909389/2sB3QFQXfE).
 
 
 ## Preparation
