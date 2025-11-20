@@ -1,34 +1,32 @@
 import { test } from '../../_fixtures/fixtures';
-import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
 
 let newSettings;
 
-test.beforeEach(async ({ page, user, factories }) => {
-  await signUpUser(page, user);
-
+test.beforeEach(async ({ factories }) => {
   newSettings = factories.userSettings.generateUserSettings();
 });
 
 test('Update all user settings for registered user', async ({
   editSettingsPage,
   viewUserProfilePage,
+  loggedInUserAndPage,
 }) => {
   await editSettingsPage.open();
   await editSettingsPage.fillProfilePictureUrlField(
-    newSettings.profilPictureUrl,
+    newSettings.profilePictureUrl,
   );
   await editSettingsPage.fillUsernameField(newSettings.username);
   await editSettingsPage.fillBioTextArea(newSettings.bio);
   await editSettingsPage.fillEmailField(newSettings.email);
   await editSettingsPage.clickUpdateSettingsButton();
   await editSettingsPage.assertProfilePictureUrlHasValue(
-    newSettings.profilPictureUrl,
+    newSettings.profilePictureUrl,
   );
   await viewUserProfilePage.assertBioHasText(newSettings.bio);
   await viewUserProfilePage.assertUsernameIsCorrect(newSettings.username);
   await viewUserProfilePage.clickEditProfileSettingsLink();
   await editSettingsPage.assertProfilePictureUrlHasValue(
-    newSettings.profilPictureUrl,
+    newSettings.profilePictureUrl,
   );
   await editSettingsPage.assertBioHasValue(newSettings.bio);
   await editSettingsPage.assertUsernameHasValue(newSettings.username);

@@ -5,7 +5,7 @@ export class UserSettingsFactory extends UserFactory {
   generateUserSettings(options = {}) {
     let userSettings = options.user ?? this.generateUser(options);
 
-    userSettings.profilPictureUrl =
+    userSettings.profilePictureUrl =
       options.profilePictureUrl ?? this.generateProfilePictureUrl();
     userSettings.bio = options.bio ?? this.generateBio();
 
