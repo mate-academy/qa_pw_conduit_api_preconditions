@@ -1,29 +1,35 @@
 import { test } from '../../_fixtures/fixtures';
-import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
-
-let newPassword;
-
-test.beforeEach(async ({ page, user, factories }) => {
-  await signUpUser(page, user);
-
-  newPassword = factories.user.generatePassword();
-});
+import { InternalHomePage } from '../../../src/ui/pages/home/InternalHomePage';
+import { EditProfileSettingsPage } from '../../../src/ui/pages/profile/EditProfileSettingsPage';
+import { ViewUserProfilePage } from '../../../src/ui/pages/profile/ViewUserProfilePage';
+import { SignInPage } from '../../../src/ui/pages/auth/SignInPage';
 
 test('Login with new password after it was updated from settings', async ({
-  editSettingsPage,
-  viewUserProfilePage,
-  signInPage,
-  internalHomePage,
-  user,
+  loggedInUserAndPage,
+  factories,
 }) => {
+  const { page, registeredUser } = loggedInUserAndPage;
+
+  const internalHomePage = new InternalHomePage(page);
+  const editSettingsPage = new EditProfileSettingsPage(page);
+  const viewUserProfilePage = new ViewUserProfilePage(page);
+  const signInPage = new SignInPage(page);
+
+  const newPassword = factories.user.generatePassword();
+
+  await internalHomePage.open();
   await editSettingsPage.open();
+
   await editSettingsPage.fillNewPasswordField(newPassword);
   await editSettingsPage.clickUpdateSettingsButton();
+
   await viewUserProfilePage.clickEditProfileSettingsLink();
   await editSettingsPage.clickLogoutButton();
+
   await signInPage.open();
-  await signInPage.fillEmailField(user.email);
+  await signInPage.fillEmailField(registeredUser.email);
   await signInPage.fillPasswordField(newPassword);
   await signInPage.clickSignInButton();
+
   await internalHomePage.yourFeed.assertTabLinkVisible();
 });
