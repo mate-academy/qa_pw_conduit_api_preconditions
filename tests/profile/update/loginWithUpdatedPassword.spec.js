@@ -1,30 +1,20 @@
 import { test } from '../../_fixtures/fixtures';
 import { InternalHomePage } from '../../../src/ui/pages/home/InternalHomePage';
-import { EditProfileSettingsPage } from '../../../src/ui/pages/profile/EditProfileSettingsPage';
-import { ViewUserProfilePage } from '../../../src/ui/pages/profile/ViewUserProfilePage';
 import { SignInPage } from '../../../src/ui/pages/auth/SignInPage';
 
-test('Login with new password after it was updated from settings', async ({
-  loggedInUserAndPage,
+test('Login with new password after it was updated via API', async ({
+  page,
+  registeredUser,
   factories,
+  usersApi,
 }) => {
-  const { page, registeredUser } = loggedInUserAndPage;
-
-  const internalHomePage = new InternalHomePage(page);
-  const editSettingsPage = new EditProfileSettingsPage(page);
-  const viewUserProfilePage = new ViewUserProfilePage(page);
   const signInPage = new SignInPage(page);
+  const internalHomePage = new InternalHomePage(page);
 
   const newPassword = factories.user.generatePassword();
 
-  await internalHomePage.open();
-  await editSettingsPage.open();
-
-  await editSettingsPage.fillNewPasswordField(newPassword);
-  await editSettingsPage.clickUpdateSettingsButton();
-
-  await viewUserProfilePage.clickEditProfileSettingsLink();
-  await editSettingsPage.clickLogoutButton();
+  const updatedUser = { ...registeredUser, password: newPassword };
+  await usersApi.updateUser(updatedUser);
 
   await signInPage.open();
   await signInPage.fillEmailField(registeredUser.email);
