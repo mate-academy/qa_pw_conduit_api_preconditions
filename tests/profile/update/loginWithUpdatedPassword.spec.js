@@ -1,29 +1,31 @@
-import { test } from '../../_fixtures/fixtures';
-import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
+import { test, expect } from '../../_fixtures/fixtures';
+import { InternalHomePage } from '../../../src/ui/pages/home/InternalHomePage';
+import { SignInPage } from '../../../src/ui/pages/auth/SignInPage';
 
-let newPassword;
-
-test.beforeEach(async ({ page, user, factories }) => {
-  await signUpUser(page, user);
-
-  newPassword = factories.user.generatePassword();
-});
-
-test('Login with new password after it was updated from settings', async ({
-  editSettingsPage,
-  viewUserProfilePage,
-  signInPage,
-  internalHomePage,
-  user,
+test('Login with new password after it was updated via API', async ({
+  page,
+  registeredUser,
+  factories,
+  usersApi,
 }) => {
-  await editSettingsPage.open();
-  await editSettingsPage.fillNewPasswordField(newPassword);
-  await editSettingsPage.clickUpdateSettingsButton();
-  await viewUserProfilePage.clickEditProfileSettingsLink();
-  await editSettingsPage.clickLogoutButton();
+  const signInPage = new SignInPage(page);
+  const internalHomePage = new InternalHomePage(page);
+
+  // Must start logged out and log in via UI → therefore we use registeredUser.
+  // registeredUser is created via API (fixture requirement).
+
+  const newPassword = factories.user.generatePassword();
+  const updatedUser = { ...registeredUser, password: newPassword };
+
+  const response = await usersApi.updateUser(updatedUser, registeredUser.token);
+  expect(response.status()).toBe(200);
+
   await signInPage.open();
-  await signInPage.fillEmailField(user.email);
+  await signInPage.assertFormVisible();
+
+  await signInPage.fillEmailField(registeredUser.email);
   await signInPage.fillPasswordField(newPassword);
   await signInPage.clickSignInButton();
+
   await internalHomePage.yourFeed.assertTabLinkVisible();
 });
