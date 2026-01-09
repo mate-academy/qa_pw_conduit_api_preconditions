@@ -1,24 +1,35 @@
-import { test } from '../../_fixtures/fixtures';
+import { test, expect } from '../../_fixtures/api/fixturesUsersApi';
 import { InternalViewArticlePage } from '../../../src/ui/pages/article/view/InternalViewArticlePage';
-import { createArticle } from '../../../src/ui/actions/articles/createArticle';
-import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
+import { createArticleApi } from '../../_fixtures/api/helpers/articlesApi';
 
 test.use({ contextsNumber: 2, usersNumber: 2 });
 
-test.beforeEach(async ({ pages, users, articleWithoutTags }) => {
-  await signUpUser(pages[0], users[0], 1);
-  await signUpUser(pages[1], users[1], 2);
-  await createArticle(pages[0], articleWithoutTags, 1);
+test.beforeEach(async ({ pages, userRequests, users, articleWithoutTags }) => {
+  // Tworzymy artykuł przez API przez pierwszego użytkownika
+  const articleData = {
+    title: articleWithoutTags.title,
+    description: articleWithoutTags.description || '',
+    body: articleWithoutTags.text,
+    tags: articleWithoutTags.tags || [],
+  };
+
+  const createdArticle = await createArticleApi(userRequests[0], articleData);
+
+  // Zapisz slug/URL artykułu do użycia w teście
+  articleWithoutTags.url = `/article/${createdArticle.slug}`;
 });
 
 test('View an article created by another registered user', async ({
-  articleWithoutTags,
   pages,
   users,
+  articleWithoutTags,
 }) => {
   const page = new InternalViewArticlePage(pages[1], 2);
 
+  // Otwórz artykuł
   await page.open(articleWithoutTags.url);
+
+  // Sprawdź zawartość artykułu
   await page.articleHeader.assertTitleIsVisible(articleWithoutTags.title);
   await page.articleContent.assertArticleTextIsVisible(articleWithoutTags.text);
   await page.articleHeader.assertAuthorNameIsVisible(users[0].username);
