@@ -8,6 +8,7 @@ export const test = base.extend<{
   usersApi;
   registeredUser;
   loggedInUserAndPage;
+  secondLoggedInUserAndPage;
   registeredUsers;
   userRequests;
 }>({
@@ -27,6 +28,14 @@ export const test = base.extend<{
     await use(user);
   },
   loggedInUserAndPage: async ({ registeredUser, browser }, use) => {
+    const storageState = generateStorageStateForAuth(registeredUser);
+
+    const context = await browser.newContext(storageState);
+    const page = await context.newPage();
+
+    await use({ registeredUser, page });
+  },
+  secondLoggedInUserAndPage: async ({ registeredUser, browser }, use) => {
     const storageState = generateStorageStateForAuth(registeredUser);
 
     const context = await browser.newContext(storageState);
