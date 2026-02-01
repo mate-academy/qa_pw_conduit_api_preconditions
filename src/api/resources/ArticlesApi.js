@@ -9,13 +9,20 @@ export class ArticlesApi extends BaseApi {
   }
   async createArticle(article, token = null) {
     return await this.step(`Create new article`, async () => {
-      return await this.client.post(ROUTES.articles().index, {
+      const options = {
         data: { article },
-        headers: {
+      };
+
+      if (token) {
+        options.headers = {
           authorization: `Token ${token}`,
           ...this._headers,
-        },
-      });
+        };
+      } else {
+        options.headers = this._headers;
+      }
+
+      return await this.client.post(ROUTES.articles().index, options);
     });
   }
 
