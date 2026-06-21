@@ -9,6 +9,7 @@ export const test = base.extend<{
   registeredUser;
   loggedInUserAndPage;
   registeredUsers;
+  loggedInUsersAndPages;
   userRequests;
 }>({
   usersApi: async ({ request, logger }, use) => {
@@ -43,6 +44,23 @@ export const test = base.extend<{
       users[i]['token'] = await usersApi.parseTokenFromBody(response);
     }
     await use(users);
+  },
+  loggedInUsersAndPages: async (
+    { registeredUsers, browser, usersNumber },
+    use,
+  ) => {
+    const pages = Array(usersNumber);
+
+    for (let i = 0; i < usersNumber; i++) {
+      const storageState = generateStorageStateForAuth(registeredUsers[i]);
+
+      const context = await browser.newContext(storageState);
+      const page = await context.newPage();
+
+      pages[i] = page;
+    }
+
+    await use({ registeredUsers, pages });
   },
   userRequests: async ({ registeredUsers, usersNumber }, use) => {
     const userRequests = Array(usersNumber);

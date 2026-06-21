@@ -5,20 +5,41 @@ import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
 
 test.use({ contextsNumber: 2, usersNumber: 1 });
 
-test.beforeEach(async ({ pages, users, articleWithoutTags }) => {
-  await signUpUser(pages[0], users[0], 1);
-  await createArticle(pages[0], articleWithoutTags, 1);
-});
+test.beforeEach(
+  async ({
+    pages,
+    users,
+    loggedInUsersAndPages,
+    articlesApi,
+    articleWithoutTags,
+  }) => {
+    const token = loggedInUsersAndPages.registeredUsers[0].token;
+    const response = await articlesApi.createArticle(articleWithoutTags, token);
+
+    await articlesApi.assertSuccessResponseCode(response);
+
+    const slug = await articlesApi.parseSlugFromResponse(response);
+
+    articleWithoutTags.url = `article/${slug}`;
+  },
+);
 
 test('View an article as not registered user', async ({
   articleWithoutTags,
+  loggedInUsersAndPages,
   pages,
-  users,
 }) => {
-  const page = new ExternalViewArticlePage(pages[1], 2);
+  const page = pages[1];
+  const user = loggedInUsersAndPages.registeredUsers[0];
 
-  await page.open(articleWithoutTags.url);
-  await page.articleHeader.assertTitleIsVisible(articleWithoutTags.title);
-  await page.articleContent.assertArticleTextIsVisible(articleWithoutTags.text);
-  await page.articleHeader.assertAuthorNameIsVisible(users[0].username);
+  const viewArticlePage = new ExternalViewArticlePage(page, 2);
+
+  await viewArticlePage.open(articleWithoutTags.url);
+  await viewArticlePage.articleHeader.assertTitleIsVisible(
+    articleWithoutTags.title,
+  );
+  await viewArticlePage.articleContent.assertArticleTextIsVisible(
+    articleWithoutTags.body,
+  );
+  await viewArticlePage.articleHeader.assertAuthorNameIsVisible(user.username);
 });

@@ -9,7 +9,7 @@ test('Creat an article with required fields', async ({
 }) => {
   const page = loggedInUserAndPage.page;
 
-  const internalHomePage = new InternalHomePage(loggedInUserAndPage.page);
+  const internalHomePage = new InternalHomePage(page);
   const createArticlePage = new CreateArticlePage(page);
   const internalViewArticlePage = new InternalViewArticlePage(page);
 
@@ -18,12 +18,12 @@ test('Creat an article with required fields', async ({
   await internalHomePage.header.clickNewArticleLink();
   await createArticlePage.fillTitleField(articleWithoutTags.title);
   await createArticlePage.fillDescriptionField(articleWithoutTags.description);
-  await createArticlePage.fillTextField(articleWithoutTags.text);
+  await createArticlePage.fillTextField(articleWithoutTags.body);
   await createArticlePage.clickPublishArticleButton();
   await internalViewArticlePage.articleHeader.assertTitleIsVisible(
     articleWithoutTags.title,
   );
   await internalViewArticlePage.articleContent.assertArticleTextIsVisible(
-    articleWithoutTags.text,
+    articleWithoutTags.body,
   );
 });

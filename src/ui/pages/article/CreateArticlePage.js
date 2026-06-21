@@ -62,10 +62,10 @@ export class CreateArticlePage extends BasePage {
     await this.step(`Submit the 'Create Article' form`, async () => {
       await this.fillTitleField(article.title);
       await this.fillDescriptionField(article.description);
-      await this.fillTextField(article.text);
+      await this.fillTextField(article.body);
 
-      if (article.tags.length > 0) {
-        await this.fillTagsField(article.tags);
+      if (article.tagList.length > 0) {
+        await this.fillTagsField(article.tagList);
       }
       await this.clickPublishArticleButton();
     });
