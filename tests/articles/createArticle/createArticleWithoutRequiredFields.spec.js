@@ -8,7 +8,7 @@ test('Creat an article without required fields', async ({
 }) => {
   const page = loggedInUserAndPage.page;
 
-  const internalHomePage = new InternalHomePage(loggedInUserAndPage.page);
+  const internalHomePage = new InternalHomePage(page);
   const createArticlePage = new CreateArticlePage(page);
 
   await internalHomePage.open();
