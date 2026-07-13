@@ -1,11 +1,11 @@
 import { test } from '../../_fixtures/fixtures';
-import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
+import { loggedInUserAndPage } from '../../../src/ui/actions/auth/loggedInUserAndPage';
 import { INVALID_EMAIL_OR_PASSWORD_MESSAGE } from '../../../src/ui/constants/authErrorMessages';
 
 let newPassword;
 
 test.beforeEach(async ({ page, user, factories }) => {
-  await signUpUser(page, user);
+  await loggedInUserAndPage(page, user);
 
   newPassword = factories.user.generatePassword();
 });
