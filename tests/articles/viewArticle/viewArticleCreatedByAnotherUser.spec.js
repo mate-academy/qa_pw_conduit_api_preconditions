@@ -1,16 +1,21 @@
 import { test } from '../../_fixtures/fixtures';
 import { InternalViewArticlePage } from '../../../src/ui/pages/article/view/InternalViewArticlePage';
-import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
+import { generateStorageStateForAuth } from '../../../src/common/helpers/generateStorageStateForAuth';
 
 test.use({ contextsNumber: 2, usersNumber: 2 });
 
-test.beforeEach(async ({ pages, users, articleWithoutTags, usersApi, articlesApi }) => {
-  await signUpUser(pages[0], users[0], 1);
-  await signUpUser(pages[1], users[1], 2);
+test.beforeEach(async ({
+  browser,
+  pages,
+  registeredUsers,
+  articleWithoutTags,
+  articlesApi,
+}) => {
+  const token = registeredUsers[0].token;
 
-  const loginResponse = await usersApi.loginUser(users[0]);
-  await usersApi.assertSuccessResponseCode(loginResponse);
-  const token = await usersApi.parseTokenFromBody(loginResponse);
+  const storageState = generateStorageStateForAuth(registeredUsers[1]);
+  const authorizedContext = await browser.newContext(storageState);
+  pages[1] = await authorizedContext.newPage();
 
   const articleForApi = {
     title: articleWithoutTags.title,
@@ -32,12 +37,12 @@ test.beforeEach(async ({ pages, users, articleWithoutTags, usersApi, articlesApi
 test('View an article created by another registered user', async ({
   articleWithoutTags,
   pages,
-  users,
+  registeredUsers,
 }) => {
   const page = new InternalViewArticlePage(pages[1], 2);
 
   await page.open(articleWithoutTags.url);
   await page.articleHeader.assertTitleIsVisible(articleWithoutTags.title);
   await page.articleContent.assertArticleTextIsVisible(articleWithoutTags.text);
-  await page.articleHeader.assertAuthorNameIsVisible(users[0].username);
+  await page.articleHeader.assertAuthorNameIsVisible(registeredUsers[0].username);
 });

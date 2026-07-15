@@ -1,15 +1,10 @@
 import { test } from '../../_fixtures/fixtures';
 import { ExternalViewArticlePage } from '../../../src/ui/pages/article/view/ExternalViewArticlePage';
-import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
 
 test.use({ contextsNumber: 2, usersNumber: 1 });
 
-test.beforeEach(async ({ pages, users, articleWithoutTags, usersApi, articlesApi }) => {
-  await signUpUser(pages[0], users[0], 1);
-
-  const loginResponse = await usersApi.loginUser(users[0]);
-  await usersApi.assertSuccessResponseCode(loginResponse);
-  const token = await usersApi.parseTokenFromBody(loginResponse);
+test.beforeEach(async ({ registeredUsers, articleWithoutTags, articlesApi }) => {
+  const token = registeredUsers[0].token;
 
   const articleForApi = {
     title: articleWithoutTags.title,
@@ -31,12 +26,12 @@ test.beforeEach(async ({ pages, users, articleWithoutTags, usersApi, articlesApi
 test('View an article as not registered user', async ({
   articleWithoutTags,
   pages,
-  users,
+  registeredUsers,
 }) => {
   const page = new ExternalViewArticlePage(pages[1], 2);
 
   await page.open(articleWithoutTags.url);
   await page.articleHeader.assertTitleIsVisible(articleWithoutTags.title);
   await page.articleContent.assertArticleTextIsVisible(articleWithoutTags.text);
-  await page.articleHeader.assertAuthorNameIsVisible(users[0].username);
+  await page.articleHeader.assertAuthorNameIsVisible(registeredUsers[0].username);
 });
