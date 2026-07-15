@@ -3,17 +3,18 @@ import { EditProfileSettingsPage } from '../../../src/ui/pages/profile/EditProfi
 import { ViewUserProfilePage } from '../../../src/ui/pages/profile/ViewUserProfilePage';
 
 export const test = base.extend<{
-  editSettingsPage;
-  viewUserProfilePage;
+  editSettingsPage: EditProfileSettingsPage;
+  viewUserProfilePage: ViewUserProfilePage;
+
 }>({
-  editSettingsPage: async ({ page }, use) => {
-    const homePage = new EditProfileSettingsPage(page);
+  editSettingsPage: async ({ loggedInUserAndPage }, use) => {
+    const editProfileSettingsPage = new EditProfileSettingsPage(loggedInUserAndPage.page);
 
-    await use(homePage);
+    await use(editProfileSettingsPage);
   },
-  viewUserProfilePage: async ({ page }, use) => {
-    const homePage = new ViewUserProfilePage(page);
+  viewUserProfilePage: async ({ loggedInUserAndPage }, use) => {
+    const viewUserProfilePage = new ViewUserProfilePage(loggedInUserAndPage.page);
 
-    await use(homePage);
+    await use(viewUserProfilePage);
   },
 });
