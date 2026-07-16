@@ -1,21 +1,30 @@
 import { test } from '../../_fixtures/fixtures';
+import { EditProfileSettingsPage } from '../../../src/ui/pages/profile/EditProfileSettingsPage';
+import { ViewUserProfilePage } from '../../../src/ui/pages/profile/ViewUserProfilePage';
+import { SignInPage } from '../../../src/ui/pages/auth/SignInPage';
+import { InternalHomePage } from '../../../src/ui/pages/home/InternalHomePage';
 import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
 
 let newPassword;
 
-test.beforeEach(async ({ page, user, factories }) => {
-  await signUpUser(page, user);
+test.beforeEach(async ({ factories }) => {
 
   newPassword = factories.user.generatePassword();
 });
 
 test('Login with new password after it was updated from settings', async ({
-  editSettingsPage,
-  viewUserProfilePage,
-  signInPage,
-  internalHomePage,
-  user,
+  loggedInUserAndPage
 }) => {
+  const page = loggedInUserAndPage.page;
+  const user = loggedInUserAndPage.registeredUser;
+  
+  const editSettingsPage = new EditProfileSettingsPage(
+    loggedInUserAndPage.page
+  );
+  const viewUserProfilePage = new ViewUserProfilePage(page);
+  const signInPage = new SignInPage(page);
+  const internalHomePage = new InternalHomePage(page);
+
   await editSettingsPage.open();
   await editSettingsPage.fillNewPasswordField(newPassword);
   await editSettingsPage.clickUpdateSettingsButton();

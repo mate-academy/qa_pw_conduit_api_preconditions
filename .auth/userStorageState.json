@@ -1,0 +1,65 @@
+{
+  "cookies": [
+    {
+      "name": "_gid",
+      "value": "GA1.2.2125580694.1784156770",
+      "domain": ".mate.academy",
+      "path": "/",
+      "expires": 1784243171,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_gat_gtag_UA_47867706_3",
+      "value": "1",
+      "domain": ".mate.academy",
+      "path": "/",
+      "expires": 1784156830,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "auth",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIyMzY0NywidXNlcm5hbWUiOiJyYWVfZ29sZG5lciIsImV4cCI6MTc4OTM0MDc3NCwiaWF0IjoxNzg0MTU2Nzc0fQ.Fhw2T9Fr3Qfn4bwBo2U0MpYJbfw5VWxORFJPCyx3omU",
+      "domain": "conduit.mate.academy",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_ga_M2SP5EM44C",
+      "value": "GS2.1.s1784156770$o1$g1$t1784156771$j59$l0$h0",
+      "domain": ".mate.academy",
+      "path": "/",
+      "expires": 1818716771.155151,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_ga",
+      "value": "GA1.1.2105557349.1784156770",
+      "domain": ".mate.academy",
+      "path": "/",
+      "expires": 1818716771.155694,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://conduit.mate.academy",
+      "localStorage": [
+        {
+          "name": "user",
+          "value": "{\"username\":\"rae_goldner\",\"email\":\"rae_lizzie.huel@yahoo.com\",\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIyMzY0NywidXNlcm5hbWUiOiJyYWVfZ29sZG5lciIsImV4cCI6MTc4OTM0MDc3NCwiaWF0IjoxNzg0MTU2Nzc0fQ.Fhw2T9Fr3Qfn4bwBo2U0MpYJbfw5VWxORFJPCyx3omU\",\"bio\":null,\"image\":null,\"effectiveImage\":\"/images/smiley-cyrus.jpg\"}"
+        }
+      ]
+    }
+  ]
+}
