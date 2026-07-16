@@ -52,9 +52,9 @@ export class EditProfileSettingsPage extends BasePage {
     });
   }
 
-  async fillNewPasswordField(url) {
+  async fillNewPasswordField(password) {
     await this.step(`Fill the 'New Password' field`, async () => {
-      await this.#newPasswordField.fill(url);
+      await this.#newPasswordField.fill(password);
     });
   }
 

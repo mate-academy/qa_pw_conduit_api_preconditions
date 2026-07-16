@@ -1,11 +1,14 @@
 import { test } from '../../_fixtures/fixtures';
 import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
+import { InternalHomePage } from '../../../src/ui/pages/home/InternalHomePage';
 import { INVALID_EMAIL_OR_PASSWORD_MESSAGE } from '../../../src/ui/constants/authErrorMessages';
 
 let newPassword;
 
-test.beforeEach(async ({ page, user, factories }) => {
-  await signUpUser(page, user);
+test.beforeEach(async ({ page, user, factories, loggedInUserAndPage }) => {
+   const internalHomePage = new InternalHomePage(loggedInUserAndPage.page);
+
+  await internalHomePage.open();
 
   newPassword = factories.user.generatePassword();
 });
@@ -14,7 +17,7 @@ test('Login with old password after it was updated from settings', async ({
   editSettingsPage,
   viewUserProfilePage,
   signInPage,
-  user,
+  user
 }) => {
   await editSettingsPage.open();
   await editSettingsPage.fillNewPasswordField(newPassword);
