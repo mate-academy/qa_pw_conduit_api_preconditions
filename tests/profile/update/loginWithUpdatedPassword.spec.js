@@ -1,12 +1,10 @@
 import { test } from '../../_fixtures/fixtures';
 import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
 import { InternalHomePage } from '../../../src/ui/pages/home/InternalHomePage';
-import { CreateArticlePage } from '../../../src/ui/pages/article/CreateArticlePage';
 let newPassword;
 
 test.beforeEach(async ({ page, user, loggedInUserAndPage }) => {
   const internalHomePage = new InternalHomePage(loggedInUserAndPage.page);
-  const createArticlePage = new CreateArticlePage(page); 
 
   await internalHomePage.open();
 

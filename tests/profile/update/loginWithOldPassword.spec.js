@@ -1,14 +1,12 @@
 import { test } from '../../_fixtures/fixtures';
 import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
 import { InternalHomePage } from '../../../src/ui/pages/home/InternalHomePage';
-import { CreateArticlePage } from '../../../src/ui/pages/article/CreateArticlePage';
 import { INVALID_EMAIL_OR_PASSWORD_MESSAGE } from '../../../src/ui/constants/authErrorMessages';
 
 let newPassword;
 
 test.beforeEach(async ({ page, user, factories, loggedInUserAndPage }) => {
    const internalHomePage = new InternalHomePage(loggedInUserAndPage.page);
-    const createArticlePage = new CreateArticlePage(page); 
 
   await internalHomePage.open();
 

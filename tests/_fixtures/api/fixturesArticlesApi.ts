@@ -2,9 +2,9 @@ import { test as base } from '@playwright/test';
 import { ArticlesApi } from '../../../src/api/resources/ArticlesApi';
 
 export const test = base.extend<{
-  articlesApi;
-  articleWithoutTags;
-  articleWithOneTag;
+  articlesApi: ArticlesApi,
+  articleWithoutTags,
+  articleWithOneTag,
 }>({
   articlesApi: async ({ request }, use) => {
     const client = new ArticlesApi(request);
@@ -33,7 +33,4 @@ export const test = base.extend<{
     logger.info('Created article with one tag fixture');
     await use(articleWithOneTag);
   },
-
-
-  
 });

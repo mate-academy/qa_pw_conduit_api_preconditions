@@ -8,13 +8,19 @@ export const test = base.extend<{
 
 }>({
   editSettingsPage: async ({ loggedInUserAndPage }, use) => {
-    const editProfileSettingsPage = new EditProfileSettingsPage(loggedInUserAndPage.page);
-
-    await use(editProfileSettingsPage);
-  },
+   const editProfileSettingsPage = new EditProfileSettingsPage(
+    loggedInUserAndPage.page,
+    loggedInUserAndPage.userId
+  );
+  await use(editProfileSettingsPage);
+},
   viewUserProfilePage: async ({ loggedInUserAndPage }, use) => {
-    const viewUserProfilePage = new ViewUserProfilePage(loggedInUserAndPage.page);
+    const viewUserProfilePage = new ViewUserProfilePage(
+    loggedInUserAndPage.page,
+    loggedInUserAndPage.userId
+  );
+  await use(viewUserProfilePage);
+},
 
-    await use(viewUserProfilePage);
-  },
+  
 });
