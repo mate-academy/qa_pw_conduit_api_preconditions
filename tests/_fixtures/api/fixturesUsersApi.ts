@@ -47,17 +47,22 @@ export const test = base.extend<{
   },
   loggedInUsersAndPages: async ({ registeredUsers, browser, usersNumber }, use) => {
     const loggedInUsersAndPages = Array(usersNumber);
+    const contexts = [];
 
     for (let i = 0; i < usersNumber; i++) {
       const storageState = generateStorageStateForAuth(registeredUsers[i]);
-
       const context = await browser.newContext(storageState);
       const page = await context.newPage();
 
+      contexts.push(context);
       loggedInUsersAndPages[i] = { registeredUser: registeredUsers[i], page };
     }
 
-    await use( loggedInUsersAndPages );
+    await use(loggedInUsersAndPages);
+
+    for (const context of contexts) {
+      await context.close();
+    }
   },
   userRequests: async ({ registeredUsers, usersNumber }, use) => {
     const userRequests = Array(usersNumber);
