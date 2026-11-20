@@ -1,18 +1,21 @@
 import { test } from '../../_fixtures/fixtures';
-import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
+import { EditProfileSettingsPage } from '../../../src/ui/pages/profile/EditProfileSettingsPage';
+import { ViewUserProfilePage } from '../../../src/ui/pages/profile/ViewUserProfilePage';
 
 let newSettings;
 
-test.beforeEach(async ({ page, user, factories }) => {
-  await signUpUser(page, user);
-
+test.beforeEach(async ({ user, factories }) => {
   newSettings = factories.userSettings.generateUserSettings({ user });
 });
 
 test('Update URL and Bio settings for registered user', async ({
-  editSettingsPage,
-  viewUserProfilePage,
+  loggedInUserAndPage,
 }) => {
+  const page = loggedInUserAndPage.page;
+
+  const editSettingsPage = new EditProfileSettingsPage(page);
+  const viewUserProfilePage = new ViewUserProfilePage(page);
+
   await editSettingsPage.open();
   await editSettingsPage.fillProfilePictureUrlField(
     newSettings.profilPictureUrl,
