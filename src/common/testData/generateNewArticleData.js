@@ -14,3 +14,12 @@ export function generateNewArticleData(logger, tagNumber = 0) {
 
   return article;
 }
+
+export function toApiArticle(article) {
+  return {
+    title: article.title,
+    description: article.description,
+    body: article.text,
+    tagList: article.tags,
+  };
+}

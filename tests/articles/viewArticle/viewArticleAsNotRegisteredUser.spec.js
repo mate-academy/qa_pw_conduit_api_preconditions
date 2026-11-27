@@ -1,24 +1,31 @@
 import { test } from '../../_fixtures/fixtures';
 import { ExternalViewArticlePage } from '../../../src/ui/pages/article/view/ExternalViewArticlePage';
-import { createArticle } from '../../../src/ui/actions/articles/createArticle';
-import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
-
-test.use({ contextsNumber: 2, usersNumber: 1 });
-
-test.beforeEach(async ({ pages, users, articleWithoutTags }) => {
-  await signUpUser(pages[0], users[0], 1);
-  await createArticle(pages[0], articleWithoutTags, 1);
-});
+import { toApiArticle } from '../../../src/common/testData/generateNewArticleData';
 
 test('View an article as not registered user', async ({
+  registeredUser,
+  articlesApi,
   articleWithoutTags,
-  pages,
-  users,
+  page,
 }) => {
-  const page = new ExternalViewArticlePage(pages[1], 2);
+  const response = await articlesApi.createArticle(
+    toApiArticle(articleWithoutTags),
+    registeredUser.token,
+  );
 
-  await page.open(articleWithoutTags.url);
-  await page.articleHeader.assertTitleIsVisible(articleWithoutTags.title);
-  await page.articleContent.assertArticleTextIsVisible(articleWithoutTags.text);
-  await page.articleHeader.assertAuthorNameIsVisible(users[0].username);
+  await articlesApi.assertSuccessResponseCode(response);
+
+  const slug = await articlesApi.parseSlugFromResponse(response);
+  const externalViewArticlePage = new ExternalViewArticlePage(page);
+
+  await externalViewArticlePage.open(`/article/${slug}`);
+  await externalViewArticlePage.articleHeader.assertTitleIsVisible(
+    articleWithoutTags.title,
+  );
+  await externalViewArticlePage.articleContent.assertArticleTextIsVisible(
+    articleWithoutTags.text,
+  );
+  await externalViewArticlePage.articleHeader.assertAuthorNameIsVisible(
+    registeredUser.username,
+  );
 });
