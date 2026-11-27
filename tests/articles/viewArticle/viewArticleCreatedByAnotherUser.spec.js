@@ -1,25 +1,39 @@
 import { test } from '../../_fixtures/fixtures';
 import { InternalViewArticlePage } from '../../../src/ui/pages/article/view/InternalViewArticlePage';
 import { createArticle } from '../../../src/ui/actions/articles/createArticle';
-import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
+import { generateStorageStateForAuth } from '../../../src/common/helpers/generateStorageStateForAuth';
 
-test.use({ contextsNumber: 2, usersNumber: 2 });
-
-test.beforeEach(async ({ pages, users, articleWithoutTags }) => {
-  await signUpUser(pages[0], users[0], 1);
-  await signUpUser(pages[1], users[1], 2);
-  await createArticle(pages[0], articleWithoutTags, 1);
-});
+test.use({ usersNumber: 1 });
 
 test('View an article created by another registered user', async ({
+  loggedInUserAndPage,
+  registeredUsers,
   articleWithoutTags,
-  pages,
-  users,
+  browser,
 }) => {
-  const page = new InternalViewArticlePage(pages[1], 2);
+  const author = loggedInUserAndPage.registeredUser;
+  const authorPage = loggedInUserAndPage.page;
+  const viewer = registeredUsers[0];
 
-  await page.open(articleWithoutTags.url);
-  await page.articleHeader.assertTitleIsVisible(articleWithoutTags.title);
-  await page.articleContent.assertArticleTextIsVisible(articleWithoutTags.text);
-  await page.articleHeader.assertAuthorNameIsVisible(users[0].username);
+  const viewerContext = await browser.newContext(
+    generateStorageStateForAuth(viewer),
+  );
+  const viewerPage = await viewerContext.newPage();
+
+  await createArticle(authorPage, articleWithoutTags, 1);
+
+  const internalViewArticlePage = new InternalViewArticlePage(viewerPage, 2);
+
+  await internalViewArticlePage.open(articleWithoutTags.url);
+  await internalViewArticlePage.articleHeader.assertTitleIsVisible(
+    articleWithoutTags.title,
+  );
+  await internalViewArticlePage.articleContent.assertArticleTextIsVisible(
+    articleWithoutTags.text,
+  );
+  await internalViewArticlePage.articleHeader.assertAuthorNameIsVisible(
+    author.username,
+  );
+
+  await viewerContext.close();
 });

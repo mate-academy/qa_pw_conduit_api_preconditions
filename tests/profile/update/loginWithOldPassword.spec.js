@@ -1,21 +1,22 @@
 import { test } from '../../_fixtures/fixtures';
-import { signUpUser } from '../../../src/ui/actions/auth/signUpUser';
 import { INVALID_EMAIL_OR_PASSWORD_MESSAGE } from '../../../src/ui/constants/authErrorMessages';
-
-let newPassword;
-
-test.beforeEach(async ({ page, user, factories }) => {
-  await signUpUser(page, user);
-
-  newPassword = factories.user.generatePassword();
-});
+import { ViewUserProfilePage } from '../../../src/ui/pages/profile/ViewUserProfilePage';
+import { EditProfileSettingsPage } from '../../../src/ui/pages/profile/EditProfileSettingsPage';
+import { SignInPage } from '../../../src/ui/pages/auth/SignInPage';
 
 test('Login with old password after it was updated from settings', async ({
-  editSettingsPage,
-  viewUserProfilePage,
-  signInPage,
-  user,
+  loggedInUserAndPage,
+  factories,
 }) => {
+  const page = loggedInUserAndPage.page;
+  const user = loggedInUserAndPage.registeredUser;
+
+  const newPassword = factories.user.generatePassword();
+
+  const editSettingsPage = new EditProfileSettingsPage(page);
+  const viewUserProfilePage = new ViewUserProfilePage(page);
+  const signInPage = new SignInPage(page);
+
   await editSettingsPage.open();
   await editSettingsPage.fillNewPasswordField(newPassword);
   await editSettingsPage.clickUpdateSettingsButton();
