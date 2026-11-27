@@ -1,30 +1,30 @@
 import { test } from '../../_fixtures/fixtures';
 import { InternalViewArticlePage } from '../../../src/ui/pages/article/view/InternalViewArticlePage';
-import { createArticle } from '../../../src/ui/actions/articles/createArticle';
-import { generateStorageStateForAuth } from '../../../src/common/helpers/generateStorageStateForAuth';
+import { toApiArticle } from '../../../src/common/testData/generateNewArticleData';
 
 test.use({ usersNumber: 1 });
 
 test('View an article created by another registered user', async ({
   loggedInUserAndPage,
   registeredUsers,
+  articlesApi,
   articleWithoutTags,
-  browser,
 }) => {
-  const author = loggedInUserAndPage.registeredUser;
-  const authorPage = loggedInUserAndPage.page;
-  const viewer = registeredUsers[0];
+  const author = registeredUsers[0];
 
-  const viewerContext = await browser.newContext(
-    generateStorageStateForAuth(viewer),
+  const response = await articlesApi.createArticle(
+    toApiArticle(articleWithoutTags),
+    author.token,
   );
-  const viewerPage = await viewerContext.newPage();
 
-  await createArticle(authorPage, articleWithoutTags, 1);
+  await articlesApi.assertSuccessResponseCode(response);
 
-  const internalViewArticlePage = new InternalViewArticlePage(viewerPage, 2);
+  const slug = await articlesApi.parseSlugFromResponse(response);
+  const internalViewArticlePage = new InternalViewArticlePage(
+    loggedInUserAndPage.page,
+  );
 
-  await internalViewArticlePage.open(articleWithoutTags.url);
+  await internalViewArticlePage.open(`/article/${slug}`);
   await internalViewArticlePage.articleHeader.assertTitleIsVisible(
     articleWithoutTags.title,
   );
@@ -34,6 +34,4 @@ test('View an article created by another registered user', async ({
   await internalViewArticlePage.articleHeader.assertAuthorNameIsVisible(
     author.username,
   );
-
-  await viewerContext.close();
 });

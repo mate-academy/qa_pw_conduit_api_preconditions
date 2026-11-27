@@ -1,19 +1,24 @@
 import { test } from '../../_fixtures/fixtures';
 import { ExternalViewArticlePage } from '../../../src/ui/pages/article/view/ExternalViewArticlePage';
-import { createArticle } from '../../../src/ui/actions/articles/createArticle';
+import { toApiArticle } from '../../../src/common/testData/generateNewArticleData';
 
 test('View an article as not registered user', async ({
-  loggedInUserAndPage,
+  registeredUser,
+  articlesApi,
   articleWithoutTags,
   page,
 }) => {
-  const author = loggedInUserAndPage.registeredUser;
+  const response = await articlesApi.createArticle(
+    toApiArticle(articleWithoutTags),
+    registeredUser.token,
+  );
 
-  await createArticle(loggedInUserAndPage.page, articleWithoutTags);
+  await articlesApi.assertSuccessResponseCode(response);
 
+  const slug = await articlesApi.parseSlugFromResponse(response);
   const externalViewArticlePage = new ExternalViewArticlePage(page);
 
-  await externalViewArticlePage.open(articleWithoutTags.url);
+  await externalViewArticlePage.open(`/article/${slug}`);
   await externalViewArticlePage.articleHeader.assertTitleIsVisible(
     articleWithoutTags.title,
   );
@@ -21,6 +26,6 @@ test('View an article as not registered user', async ({
     articleWithoutTags.text,
   );
   await externalViewArticlePage.articleHeader.assertAuthorNameIsVisible(
-    author.username,
+    registeredUser.username,
   );
 });
